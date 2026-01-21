@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github, Linkedin, Twitter } from "lucide-react";
+import { Instagram, Github } from "lucide-react";
 
 export default function Footer() {
     const year = new Date().getFullYear();
@@ -19,23 +19,15 @@ export default function Footer() {
                         className="text-muted-foreground hover:text-foreground"
                         prefetch={false}
                     >
-                        <Twitter className="h-5 w-5" />
+                        <Instagram className="h-5 w-5" />
                     </Link>
                     <Link
-                        href="#"
+                        href="https://github.com/zoya-nasim"
                         aria-label="GitHub"
                         className="text-muted-foreground hover:text-foreground"
                         prefetch={false}
                     >
                         <Github className="h-5 w-5" />
-                    </Link>
-                    <Link
-                        href="#"
-                        aria-label="LinkedIn"
-                        className="text-muted-foreground hover:text-foreground"
-                        prefetch={false}
-                    >
-                        <Linkedin className="h-5 w-5" />
                     </Link>
                 </div>
             </div>

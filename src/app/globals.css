@@ -1,26 +1,159 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Dark-only tokens */
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 6%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 6% 12%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 6% 12%;
+    --muted-foreground: 240 5% 70%;
+
+    --accent: 262.1 83.3% 57.8%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62% 35%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 6% 16%;
+    --input: 240 6% 16%;
+    --ring: 262.1 83.3% 57.8%;
+
+    --radius: 0.35rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+
+    /*background-image:
+            linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+            url("/images/bg-grid.png");*/
+    background: hsl(var(--background));
+    background-size: 105%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+
+  section {
+    @apply w-full py-12 md:py-20 lg:py-24;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* =========================================================
+   NEON CARD (SVG Border Sweep) — NO MASK, NO CONIC GRADIENT
+   ========================================================= */
+@layer utilities {
+  /* Required for animating the angle */
+  @property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  .neon-card {
+    position: relative;
+    border-radius: 10px;
+    transform: translateZ(0);
+  }
+
+  .neon-card-inner {
+    position: relative;
+    z-index: 2;
+
+    height: 100%;
+    width: 100%;
+    padding: 16px;
+
+    border-radius: 8.5px; /* ✅ outerRadius - borderThickness (10 - 1.5) */
+    background: hsl(var(--background));
+    border: 1px solid rgba(168, 85, 247, 0.12);
+  }
+
+  /* BOTH pseudo elements are the object behind the card */
+  .neon-card::before,
+  .neon-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 10px; /* ✅ MUST match .neon-card */
+    padding: 1.5px;      /* ring thickness */
+
+    background-image:
+            conic-gradient(
+                    from calc(var(--angle)),
+                    rgba(168,85,247,0) 0deg,
+                    rgba(168,85,247,0) 300deg,
+                    rgba(168,85,247,1) 335deg,
+                    rgba(168,85,247,0) 360deg
+            ),
+            conic-gradient(
+                    from calc(var(--angle) + 180deg),
+                    rgba(168,85,247,0) 0deg,
+                    rgba(168,85,247,0) 300deg,
+                    rgba(168,85,247,1) 335deg,
+                    rgba(168,85,247,0) 360deg
+            );
+
+
+
+    z-index: -1;
+
+    opacity: 0;
+    transition: opacity 180ms ease;
+
+    animation: neon-spin 1.9s linear infinite;
+  }
+
+
+  /* glow layer */
+  .neon-card::before {
+    filter: blur(10px);
+    opacity: 0; /* hover controls it */
+  }
+
+  /* sharp sweep layer */
+  .neon-card::after {
+    filter:none
+  }
+
+
+
+
+  /* show only on hover */
+  .neon-card:hover::after {
+    opacity: 1;
+  }
+
+  .neon-card:hover::before {
+    opacity: 0.35;
+  }
+
+  @keyframes neon-spin {
+    from {
+      --angle: 0deg;
+    }
+    to {
+      --angle: 360deg;
+    }
+  }
 }
